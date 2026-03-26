@@ -4,27 +4,51 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Design Patterns Dashboard</title>
+
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    header { margin-bottom: 16px; }
-    nav { float:left; width: 220px; margin-right: 24px; }
-    main { margin-left: 260px; }
-    .category { font-weight: bold; margin-top: 8px; }
-    .pattern { margin-left: 8px; }
-    pre { background:#f6f8fa; padding:12px; overflow:auto; }
-    .readme { white-space:pre-wrap; background:#fff; border:1px solid #eee; padding:12px; }
-
-    /* Top-right control buttons */
-    .controls { position:fixed; top:12px; right:12px; z-index:2000; }
-    .controls button { margin-left:8px; padding:8px 12px; border-radius:4px; border:1px solid #ccc; background:#fff; cursor:pointer; }
-    .controls button:hover { background:#f0f0f0; }
-
-    /* Improve mobile layout */
-    @media(max-width:800px) {
-      nav { position:static; float:none; width:auto; margin:0 0 16px 0; }
-      main { margin-left:0; }
-      .controls { position:static; margin-bottom:12px; }
+    :root{
+      --bg:#0f1720; --card:#0b1220; --muted:#9aa4b2; --accent:#4f46e5; --accent-2:#06b6d4; --glass: rgba(255,255,255,0.03);
+      --text:#e6eef6; --nav:#071021; --shadow: 0 6px 18px rgba(2,6,23,0.6);
     }
+    [data-theme="light"]{ --bg:#f6f8fb; --card:#ffffff; --muted:#64748b; --accent:#4f46e5; --accent-2:#06b6d4; --glass: rgba(0,0,0,0.04); --text:#0f1720; --nav:#ffffff; --shadow: 0 6px 18px rgba(15,23,32,0.08); }
+
+    html,body{height:100%; margin:0; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:linear-gradient(180deg, var(--bg) 0%, #071126 100%); color:var(--text);}
+    .app{max-width:1200px; margin:28px auto; padding:20px;}
+
+    header.app-header{display:flex; align-items:center; gap:12px; justify-content:space-between; margin-bottom:18px}
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2)); display:flex;align-items:center;justify-content:center;font-weight:700;color:white;box-shadow:var(--shadow)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .controls{display:flex;align-items:center;gap:8px}
+    .btn{background:var(--card);border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:8px;color:var(--text);cursor:pointer;box-shadow:var(--shadow);display:inline-flex;gap:8px;align-items:center}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border:none}
+
+    .layout{display:grid;grid-template-columns:260px 1fr; gap:18px}
+
+    nav.sidebar{background:var(--nav); padding:12px; border-radius:12px; height:calc(100vh - 160px); position:sticky; top:20px; overflow:auto}
+    nav .section-title{font-size:12px;color:var(--muted);margin:8px 0}
+    nav a{display:block;color:var(--text);padding:6px 8px;border-radius:6px;text-decoration:none;font-size:14px}
+    nav a:hover{background:var(--glass)}
+    nav .search{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);margin-bottom:8px;background:transparent;color:var(--text)}
+
+    main.content{min-height:70vh}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+    .card{background:var(--card);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow)}
+    .card h3{margin:0 0 8px 0}
+    .card p{margin:0;color:var(--muted);font-size:13px}
+
+    .readme{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:12px;border-radius:8px;color:var(--text);font-size:13px}
+
+    footer{margin-top:18px;color:var(--muted);font-size:12px}
+
+    /* small screens */
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.logo{width:44px;height:44px}}
   </style>
   <script type="module">
     // Load mermaid when needed
@@ -54,184 +78,171 @@
     window.addEventListener('load', renderMermaid);
   </script>
 </head>
-<body>
-  <header>
-    <h1>Design Patterns Dashboard</h1>
-    <p>Visual index of design patterns in this repository. Click items on the left to view details.</p>
-  </header>
+<body data-theme="dark">
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo">DP</div>
+        <div>
+          <h1>Design Patterns Dashboard</h1>
+          <p class="lead">Interactive index of patterns — quick definitions, docs and visuals</p>
+        </div>
+      </div>
 
-  <!-- Top-right print / PDF buttons -->
-  <div class="controls">
-    <button id="printBtn" title="Print this page">Print</button>
-    <button id="pdfBtn" title="Download as PDF">Download PDF</button>
-  </div>
+      <div class="controls">
+        <input id="globalSearch" class="search" placeholder="Search patterns or keywords..." aria-label="search" style="width:320px" />
+        <button id="themeToggle" class="btn" title="Toggle theme">🌙</button>
+        <button id="printBtn" class="btn" title="Print page">🖨 Print</button>
+        <button id="pdfBtn" class="btn primary" title="Download PDF">⬇ PDF</button>
+      </div>
+    </header>
 
-  <nav>
-    <div class="category">Categories</div>
-    <div class="pattern"><a href="#diagram">Pattern Map (diagram)</a></div>
-    <div class="category">Creational</div>
-    <div class="pattern"><a href="#SingletonPattern">SingletonPattern</a></div>
-    <div class="pattern"><a href="#PrototypePattern">PrototypePattern</a></div>
-    <div class="pattern"><a href="#FactoryPattern">FactoryPattern</a></div>
-    <div class="pattern"><a href="#BuilderPattern">BuilderPattern</a></div>
-    <div class="pattern"><a href="#AbstractFactoryPattern">AbstractFactoryPattern</a></div>
+    <div class="layout">
+      <nav class="sidebar" aria-label="Sidebar navigation">
+        <div class="section-title">Diagram</div>
+        <a href="#diagram">Pattern Map</a>
+        <div class="section-title">Creational</div>
+        <a href="#SingletonPattern">Singleton</a>
+        <a href="#PrototypePattern">Prototype</a>
+        <a href="#FactoryPattern">Factory</a>
+        <a href="#BuilderPattern">Builder</a>
+        <a href="#AbstractFactoryPattern">Abstract Factory</a>
+        <div class="section-title">Structural</div>
+        <a href="#AdapterPattern">Adapter</a>
+        <a href="#CompositePattern">Composite</a>
+        <a href="#DecoratorPattern">Decorator</a>
+        <a href="#FacadePattern">Facade</a>
+        <a href="#ProxyPattern">Proxy</a>
+        <div class="section-title">Behavioral</div>
+        <a href="#CommandPattern">Command</a>
+        <a href="#ObserverPattern">Observer</a>
+        <a href="#StatePattern">State</a>
+        <a href="#StrategyPattern">Strategy</a>
+        <a href="#TemplateMethodPattern">Template Method</a>
+        <div class="section-title">Resilience</div>
+        <a href="#CircuitBreakerPattern">Circuit Breaker</a>
+        <a href="#RetryPattern">Retry</a>
+        <a href="#TimeoutPattern">Timeout</a>
+      </nav>
 
-    <div class="category">Structural</div>
-    <div class="pattern"><a href="#AdapterPattern">AdapterPattern</a></div>
-    <div class="pattern"><a href="#CompositePattern">CompositePattern</a></div>
-    <div class="pattern"><a href="#DecoratorPattern">DecoratorPattern</a></div>
-    <div class="pattern"><a href="#FacadePattern">FacadePattern</a></div>
-    <div class="pattern"><a href="#ProxyPattern">ProxyPattern</a></div>
+      <main class="content">
+        <section id="diagram" class="card">
+          <h3>Pattern Map</h3>
+          <div id="mermaid" style="min-height:220px"></div>
+          <script id="mermaid-diagram" type="text/plain">
+            %%{init: { 'theme':'base', 'themeVariables': { 'primaryColor': '#4f46e5', 'secondaryColor':'#06b6d4', 'tertiaryColor':'#0b1220' }}}%%
+            graph LR
+              subgraph Creational
+                SingletonPattern[Singleton]
+                PrototypePattern[Prototype]
+                FactoryPattern[Factory]
+                BuilderPattern[Builder]
+                AbstractFactoryPattern[AbstractFactory]
+              end
+              subgraph Structural
+                AdapterPattern[Adapter]
+                CompositePattern[Composite]
+                DecoratorPattern[Decorator]
+                FacadePattern[Facade]
+                ProxyPattern[Proxy]
+              end
+              subgraph Behavioral
+                CommandPattern[Command]
+                ObserverPattern[Observer]
+                StatePattern[State]
+                StrategyPattern[Strategy]
+                TemplateMethodPattern[TemplateMethod]
+              end
+              subgraph Resilience
+                CircuitBreakerPattern[CircuitBreaker]
+                RetryPattern[Retry]
+                TimeoutPattern[Timeout]
+              end
+              Creational --> Structural --> Behavioral --> Resilience
+          </script>
+        </section>
 
-    <div class="category">Behavioral</div>
-    <div class="pattern"><a href="#CommandPattern">CommandPattern</a></div>
-    <div class="pattern"><a href="#ObserverPattern">ObserverPattern</a></div>
-    <div class="pattern"><a href="#StatePattern">StatePattern</a></div>
-    <div class="pattern"><a href="#StrategyPattern">StrategyPattern</a></div>
-    <div class="pattern"><a href="#TemplateMethodPattern">TemplateMethodPattern</a></div>
+        <div class="grid" id="patternsGrid">
 
-    <div class="category">Resilience</div>
-    <div class="pattern"><a href="#CircuitBreakerPattern">CircuitBreakerPattern</a></div>
-    <div class="pattern"><a href="#RetryPattern">RetryPattern</a></div>
-    <div class="pattern"><a href="#TimeoutPattern">TimeoutPattern</a></div>
-  </nav>
+          <article id="SingletonPattern" class="card">
+            <h3>Singleton</h3>
+            <p class="readme"><strong>Short definition:</strong> Ensures a class has only one instance and a global access point. Common for configs, caches, or connection pools.</p>
+          </article>
 
-  <main>
-    <section id="diagram">
-      <h2>Pattern Map</h2>
-      <div id="mermaid"></div>
-      <script id="mermaid-diagram" type="text/plain">
-        %%{init: { 'theme':'default' }}%%
-        graph LR
-          subgraph Creational
-            SingletonPattern
-            PrototypePattern
-            FactoryPattern
-            BuilderPattern
-            AbstractFactoryPattern
-          end
-          subgraph Structural
-            AdapterPattern
-            CompositePattern
-            DecoratorPattern
-            FacadePattern
-            ProxyPattern
-          end
-          subgraph Behavioral
-            CommandPattern
-            ObserverPattern
-            StatePattern
-            StrategyPattern
-            TemplateMethodPattern
-          end
-          subgraph Resilience
-            CircuitBreakerPattern
-            RetryPattern
-            TimeoutPattern
-          end
-          Creational --> Structural
-          Structural --> Behavioral
-          Behavioral --> Resilience
-      </script>
-    </section>
+          <article id="PrototypePattern" class="card">
+            <h3>Prototype</h3>
+            <p class="readme"><strong>Short definition:</strong> Create new objects by cloning a prototypical instance—useful when construction is costly or complex.</p>
+          </article>
 
-    <section id="SingletonPattern">
-      <h2>SingletonPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.creational.SingletonPattern</code></p>
-      <p><strong>Definition:</strong> Ensures a class has only one instance and provides a global point of access to it. Useful for shared resources like configuration, caches, or connection managers.</p>
-    </section>
+          <article id="FactoryPattern" class="card">
+            <h3>Factory</h3>
+            <p class="readme"><strong>Short definition:</strong> Encapsulate object creation in a factory method/class to hide concrete types and improve modularity.</p>
+          </article>
 
-    <section id="PrototypePattern">
-      <h2>PrototypePattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.creational.PrototypePattern</code></p>
-      <p><strong>Definition:</strong> Create new objects by copying a prototypical instance, allowing efficient object creation when construction is expensive or complex.</p>
-    </section>
+          <article id="BuilderPattern" class="card">
+            <h3>Builder</h3>
+            <p class="readme"><strong>Short definition:</strong> Provide a fluent builder API to assemble complex objects step-by-step for readability and immutability.</p>
+          </article>
 
-    <section id="FactoryPattern">
-      <h2>FactoryPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.creational.FactoryPattern</code></p>
-      <p><strong>Definition:</strong> Encapsulates object creation logic in a factory class or method, letting callers request objects without knowing concrete classes; simplifies instantiation and promotes loose coupling.</p>
-    </section>
+          <article id="AbstractFactoryPattern" class="card">
+            <h3>Abstract Factory</h3>
+            <p class="readme"><strong>Short definition:</strong> Produce families of related objects without specifying their concrete classes; ensures compatibility between products.</p>
+          </article>
 
-    <section id="BuilderPattern">
-      <h2>BuilderPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.creational.BuilderPattern</code></p>
-      <p><strong>Definition:</strong> Provides a fluent API to construct complex objects step-by-step, separating construction from representation and improving readability for many-parameter objects.</p>
-    </section>
+          <article id="AdapterPattern" class="card">
+            <h3>Adapter</h3>
+            <p class="readme"><strong>Short definition:</strong> Convert one interface to another so incompatible systems can work together without modifying their code.</p>
+          </article>
 
-    <section id="AbstractFactoryPattern">
-      <h2>AbstractFactoryPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.creational.AbstractFactoryPattern</code></p>
-      <p><strong>Definition:</strong> Offers an interface for creating families of related objects without specifying concrete classes, ensuring consistent combinations of product variants.</p>
-    </section>
+          <article id="CompositePattern" class="card">
+            <h3>Composite</h3>
+            <p class="readme"><strong>Short definition:</strong> Build tree structures of objects so clients can treat individual and composite objects uniformly.</p>
+          </article>
 
-    <section id="AdapterPattern">
-      <h2>AdapterPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.structural.AdapterPattern</code></p>
-      <p><strong>Definition:</strong> Converts one interface into another expected by clients, allowing incompatible classes to work together without changing their source code.</p>
-    </section>
+          <article id="DecoratorPattern" class="card">
+            <h3>Decorator</h3>
+            <p class="readme"><strong>Short definition:</strong> Dynamically add responsibilities to objects by wrapping them with decorator objects rather than subclassing.</p>
+          </article>
 
-    <section id="CompositePattern">
-      <h2>CompositePattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.structural.CompositePattern</code></p>
-      <p><strong>Definition:</strong> Compose objects into tree structures to represent part-whole hierarchies, treating individual objects and compositions uniformly to simplify client code.</p>
-    </section>
+          <article id="FacadePattern" class="card">
+            <h3>Facade</h3>
+            <p class="readme"><strong>Short definition:</strong> Offer a simplified interface to a complex subsystem, hiding complexity from clients and reducing dependencies.</p>
+          </article>
 
-    <section id="DecoratorPattern">
-      <h2>DecoratorPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.structural.DecoratorPattern</code></p>
-      <p><strong>Definition:</strong> Attach additional responsibilities to objects dynamically by wrapping them with decorator objects, providing flexible behavior extension without inheritance.</p>
-    </section>
+          <article id="ProxyPattern" class="card">
+            <h3>Proxy</h3>
+            <p class="readme"><strong>Short definition:</strong> Provide a placeholder for another object to control access, lazy-load, or add caching/security layers.</p>
+          </article>
 
-    <section id="FacadePattern">
-      <h2>FacadePattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.structural.FacadePattern</code></p>
-      <p><strong>Definition:</strong> Provide a simplified higher-level interface that hides the complexity of a subsystem, making it easier for clients to interact with multiple components.</p>
-    </section>
+          <article id="CommandPattern" class="card">
+            <h3>Command</h3>
+            <p class="readme"><strong>Short definition:</strong> Encapsulate requests as objects to support queuing, logging, undo, and decouple senders from receivers.</p>
+          </article>
 
-    <section id="ProxyPattern">
-      <h2>ProxyPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.structural.ProxyPattern</code></p>
-      <p><strong>Definition:</strong> Provide a surrogate or placeholder for another object to control access, add caching, lazy initialization, or access control without changing the original object.</p>
-    </section>
+          <article id="ObserverPattern" class="card">
+            <h3>Observer</h3>
+            <p class="readme"><strong>Short definition:</strong> Maintain dependencies so observers are notified automatically when an observable's state changes—useful for events and pub/sub.</p>
+          </article>
 
-    <section id="CommandPattern">
-      <h2>CommandPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.behavioral.CommandPattern</code></p>
-      <p><strong>Definition:</strong> Encapsulate requests as objects (commands) to parameterize clients, support queuing, undo/redo, and decouple command issuance from execution.</p>
-    </section>
+          <article id="StatePattern" class="card">
+            <h3>State</h3>
+            <p class="readme"><strong>Short definition:</strong> Allow objects to change behavior when internal state changes by encapsulating states into separate classes.</p>
+          </article>
 
-    <section id="ObserverPattern">
-      <h2>ObserverPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.behavioral.ObserverPattern</code></p>
-      <p><strong>Definition:</strong> Define a one-to-many dependency so that when an object changes state, its dependents are automatically notified and updated, enabling event-driven designs.</p>
-    </section>
+          <article id="StrategyPattern" class="card">
+            <h3>Strategy</h3>
+            <p class="readme"><strong>Short definition:</strong> Encapsulate interchangeable algorithms behind a common interface so clients can switch strategies at runtime.</p>
+          </article>
 
-    <section id="StatePattern">
-      <h2>StatePattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.behavioral.StatePattern</code></p>
-      <p><strong>Definition:</strong> Allow an object to alter its behavior when its internal state changes by encapsulating states as separate objects and delegating behavior to them.</p>
-    </section>
+          <article id="TemplateMethodPattern" class="card">
+            <h3>Template Method</h3>
+            <p class="readme"><strong>Short definition:</strong> Define an algorithm skeleton in a base class and let subclasses override steps without changing the structure.</p>
+          </article>
 
-    <section id="StrategyPattern">
-      <h2>StrategyPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.behavioral.StrategyPattern</code></p>
-      <p><strong>Definition:</strong> Define a family of interchangeable algorithms, encapsulate each one, and make them interchangeable so clients can select algorithms at runtime.</p>
-    </section>
-
-    <section id="TemplateMethodPattern">
-      <h2>TemplateMethodPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.behavioral.TemplateMethodPattern</code></p>
-      <p><strong>Definition:</strong> Define the skeleton of an algorithm in an operation, deferring some steps to subclasses so they can vary certain parts without changing structure.</p>
-    </section>
-
-    <section id="CircuitBreakerPattern">
-      <h2>CircuitBreakerPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.resilience.CircuitBreakerPattern</code></p>
-      <p><strong>Definition:</strong> Protect downstream services by stopping calls to a failing service for a period (OPEN), probing it (HALF-OPEN), and closing when healthy again to prevent cascading failures.</p>
-      <h3>README</h3>
-      <div class="readme">
-Resilience Patterns
+          <article id="CircuitBreakerPattern" class="card">
+            <h3>Circuit Breaker</h3>
+            <p class="readme"><strong>Short definition:</strong> Temporarily stop calling an unhealthy downstream service, probe it periodically, and resume when it recovers to prevent cascading failures.</p>
+            <div style="margin-top:10px" class="readme">Resilience Patterns
 
 This directory contains demo implementations for common resilience/fault-tolerance patterns.
 
@@ -246,126 +257,72 @@ Notes:
 - For production use, prefer using a mature library like `resilience4j` and integrate it with metrics collection and configuration.
 
 Running tests:
-- The repository includes basic JUnit tests that run each demo's `main` method. Use `mvn test` to run them (requires internet to download test dependencies).
-      </div>
-    </section>
+- The repository includes basic JUnit tests that run each demo's `main` method. Use `mvn test` to run them (requires internet to download test dependencies).</div>
+          </article>
 
-    <section id="RetryPattern">
-      <h2>RetryPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.resilience.RetryPattern</code></p>
-      <p><strong>Definition:</strong> Retry transient operations with a configurable backoff and optional jitter to handle temporary failures while avoiding thundering herds; ensure retries are safe for idempotent operations.</p>
-    </section>
+          <article id="RetryPattern" class="card">
+            <h3>Retry</h3>
+            <p class="readme"><strong>Short definition:</strong> Retry transient operations with configurable backoff and jitter while avoiding overload; ensure idempotency where needed.</p>
+          </article>
 
-    <section id="TimeoutPattern">
-      <h2>TimeoutPattern</h2>
-      <p>See source: <code>com.debasish.designpatterns.resilience.TimeoutPattern</code></p>
-      <p><strong>Definition:</strong> Bound operation duration to fail fast and free resources; useful to prevent blocked threads and propagate deadlines in distributed systems.</p>
-    </section>
+          <article id="TimeoutPattern" class="card">
+            <h3>Timeout</h3>
+            <p class="readme"><strong>Short definition:</strong> Bound how long you wait for operations, fail fast to free resources, and prevent thread starvation in distributed systems.</p>
+          </article>
 
-    <section id="project-readme">
-      <h2>Project README</h2>
-      <div class="readme">
-# java-design-patterns-practice
-Collection of Java &amp; Spring Boot design pattern implementations with simple explanations and real-world examples.
+        </div>
 
-# Java Design Patterns with Spring Boot 🚀
-
-This repository contains simple and practical implementations of **Design Patterns using Java and Spring Boot**.
-
-The goal of this repo is to:
-- Understand design patterns in a simple way
-- See real-world usage in Spring Boot
-- Prepare for backend interviews
-
----
-
-## 📌 What are Design Patterns?
-
-Design patterns are reusable solutions to common software design problems.
-
-They help to:
-- Write clean code
-- Improve scalability
-- Reduce tight coupling
-- Make code easier to maintain
-
----
-
-## 🧩 Types of Design Patterns Covered
-
-### 1. Creational Patterns
-- Singleton
-- Factory
-- Abstract Factory
-- Builder
-- Prototype
-
-### 2. Structural Patterns
-- Adapter
-- Decorator
-- Proxy
-- Facade
-- Composite
-
-### 3. Behavioral Patterns
-- Strategy
-- Observer
-- Command
-- State
-- Template Method
-
----
-
-## 📂 Project Structure
-      </div>
-    </section>
-
-  </main>
+        <footer>
+          <p>Docs generated from repository files. Use the controls above to print or download a PDF.</p>
+        </footer>
+      </main>
+    </div>
+  </div>
 
   <script>
-    // Print button
-    document.getElementById('printBtn').addEventListener('click', function () {
-      window.print();
-    });
-
-    // Download PDF button - dynamically load html2pdf bundle and export the <main> content
-    async function loadHtml2Pdf() {
-      if (window.html2pdf) return window.html2pdf;
-      return new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = 'https://unpkg.com/html2pdf.js@0.9.2/dist/html2pdf.bundle.min.js';
-        s.onload = () => resolve(window.html2pdf);
-        s.onerror = reject;
-        document.head.appendChild(s);
-      });
+    // MERMAID rendering (load ESM module dynamically and render)
+    async function renderMermaid(){
+      try{
+        if(!window.mermaid){
+          const s=document.createElement('script'); s.type='module'; s.src='https://unpkg.com/mermaid@10/dist/mermaid.esm.min.mjs'; document.head.appendChild(s);
+          await new Promise(r=>setTimeout(r,300));
+        }
+        if(window.mermaid){ mermaid.initialize({startOnLoad:false}); const diagram=document.getElementById('mermaid-diagram').textContent; const c=document.getElementById('mermaid'); c.innerHTML=''; mermaid.render('diagram',diagram,(svg)=>{c.innerHTML=svg}); }
+      }catch(e){console.warn('mermaid error',e)}
     }
+    window.addEventListener('load',renderMermaid);
 
-    document.getElementById('pdfBtn').addEventListener('click', async function () {
-      try {
-        const html2pdf = await loadHtml2Pdf();
-        // Clone main to avoid controls and nav in PDF
-        const main = document.querySelector('main').cloneNode(true);
-        // Remove control buttons inside cloned content if present
-        const controls = main.querySelector('.controls');
-        if (controls) controls.remove();
-        // Optional: expand mermaid SVG so it is captured; mermaid rendered SVG is already in DOM
-        const opt = {
-          margin: 12,
-          filename: 'design-patterns-dashboard.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-        // Create a container for PDF generation to avoid layout differences
-        const wrapper = document.createElement('div');
-        wrapper.style.background = '#fff';
-        wrapper.appendChild(main);
-        await html2pdf().set(opt).from(wrapper).save();
-      } catch (err) {
-        console.error('Failed to generate PDF', err);
-        alert('PDF generation failed: ' + (err && err.message ? err.message : err));
+    // Theme toggle
+    const themeToggle=document.getElementById('themeToggle'); const root=document.documentElement;
+    function setTheme(t){ document.body.setAttribute('data-theme', t); themeToggle.textContent = t==='dark' ? '🌙' : '☀️'; localStorage.setItem('dp-theme', t); }
+    themeToggle.addEventListener('click', ()=> setTheme(document.body.getAttribute('data-theme')==='dark' ? 'light' : 'dark'));
+    const saved = localStorage.getItem('dp-theme') || 'dark'; setTheme(saved);
+
+    // Search filter
+    const search=document.getElementById('globalSearch'); const grid=document.getElementById('patternsGrid');
+    search.addEventListener('input', ()=>{
+      const q=search.value.trim().toLowerCase(); for(const card of grid.querySelectorAll('.card')){
+        const txt = card.innerText.toLowerCase(); card.style.display = q && !txt.includes(q) ? 'none' : '';
       }
     });
+
+    // Print
+    document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+
+    // PDF download (html2pdf)
+    async function loadHtml2Pdf(){ if(window.html2pdf) return window.html2pdf; return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://unpkg.com/html2pdf.js@0.9.2/dist/html2pdf.bundle.min.js'; s.onload=()=>res(window.html2pdf); s.onerror=rej; document.head.appendChild(s); }); }
+    document.getElementById('pdfBtn').addEventListener('click', async ()=>{
+      try{
+        const html2pdf = await loadHtml2Pdf(); const main = document.querySelector('main').cloneNode(true);
+        // remove sidebar and controls from snapshot
+        const nav = main.querySelector('nav'); if(nav) nav.remove(); const controls = document.querySelector('.controls'); if(controls) controls.remove();
+        const opt = { margin:12, filename:'design-patterns-dashboard.pdf', image:{type:'jpeg',quality:0.95}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
+        const wrap = document.createElement('div'); wrap.style.background='#fff'; wrap.appendChild(main); await html2pdf().set(opt).from(wrap).save();
+      }catch(err){ console.error(err); alert('PDF generation failed: '+(err && err.message?err.message:err)); }
+    });
+
+    // Smooth anchor scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click', e=>{ e.preventDefault(); const id=a.getAttribute('href').slice(1); const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }));
   </script>
 </body>
 </html>
