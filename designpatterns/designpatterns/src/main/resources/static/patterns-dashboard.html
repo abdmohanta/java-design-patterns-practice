@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Design Patterns Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    header { margin-bottom: 16px; }
+    nav { float:left; width: 220px; margin-right: 24px; }
+    main { margin-left: 260px; }
+    .category { font-weight: bold; margin-top: 8px; }
+    .pattern { margin-left: 8px; }
+    pre { background:#f6f8fa; padding:12px; overflow:auto; }
+    .readme { white-space:pre-wrap; background:#fff; border:1px solid #eee; padding:12px; }
+  </style>
+  <script type="module">
+    // Load mermaid when needed
+    async function renderMermaid() {
+      if (!window.mermaid) {
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/mermaid@10/dist/mermaid.esm.min.mjs';
+        script.type = 'module';
+        document.head.appendChild(script);
+        // Wait a short moment for module to load
+        await new Promise(r => setTimeout(r, 300));
+      }
+      // Initialize mermaid if available
+      if (window.mermaid) {
+        // mermaid is a module; use globalRenderer if available
+        try {
+          mermaid.initialize({ startOnLoad: false });
+          const diagram = document.getElementById('mermaid-diagram').textContent;
+          const container = document.getElementById('mermaid');
+          container.innerHTML = '';
+          mermaid.render('diagram', diagram, (svg) => { container.innerHTML = svg; });
+        } catch (e) {
+          console.warn('mermaid render failed', e);
+        }
+      }
+    }
+    window.addEventListener('load', renderMermaid);
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Design Patterns Dashboard</h1>
+    <p>Visual index of design patterns in this repository. Click items on the left to view details.</p>
+  </header>
+
+  <nav>
+    <div class="category">Categories</div>
+    <div class="pattern"><a href="#diagram">Pattern Map (diagram)</a></div>
+    <div class="category">Creational</div>
+    <div class="pattern"><a href="#SingletonPattern">SingletonPattern</a></div>
+    <div class="pattern"><a href="#PrototypePattern">PrototypePattern</a></div>
+    <div class="pattern"><a href="#FactoryPattern">FactoryPattern</a></div>
+    <div class="pattern"><a href="#BuilderPattern">BuilderPattern</a></div>
+    <div class="pattern"><a href="#AbstractFactoryPattern">AbstractFactoryPattern</a></div>
+
+    <div class="category">Structural</div>
+    <div class="pattern"><a href="#AdapterPattern">AdapterPattern</a></div>
+    <div class="pattern"><a href="#CompositePattern">CompositePattern</a></div>
+    <div class="pattern"><a href="#DecoratorPattern">DecoratorPattern</a></div>
+    <div class="pattern"><a href="#FacadePattern">FacadePattern</a></div>
+    <div class="pattern"><a href="#ProxyPattern">ProxyPattern</a></div>
+
+    <div class="category">Behavioral</div>
+    <div class="pattern"><a href="#CommandPattern">CommandPattern</a></div>
+    <div class="pattern"><a href="#ObserverPattern">ObserverPattern</a></div>
+    <div class="pattern"><a href="#StatePattern">StatePattern</a></div>
+    <div class="pattern"><a href="#StrategyPattern">StrategyPattern</a></div>
+    <div class="pattern"><a href="#TemplateMethodPattern">TemplateMethodPattern</a></div>
+
+    <div class="category">Resilience</div>
+    <div class="pattern"><a href="#CircuitBreakerPattern">CircuitBreakerPattern</a></div>
+    <div class="pattern"><a href="#RetryPattern">RetryPattern</a></div>
+    <div class="pattern"><a href="#TimeoutPattern">TimeoutPattern</a></div>
+  </nav>
+
+  <main>
+    <section id="diagram">
+      <h2>Pattern Map</h2>
+      <div id="mermaid"></div>
+      <script id="mermaid-diagram" type="text/plain">
+        %%{init: { 'theme':'default' }}%%
+        graph LR
+          subgraph Creational
+            SingletonPattern
+            PrototypePattern
+            FactoryPattern
+            BuilderPattern
+            AbstractFactoryPattern
+          end
+          subgraph Structural
+            AdapterPattern
+            CompositePattern
+            DecoratorPattern
+            FacadePattern
+            ProxyPattern
+          end
+          subgraph Behavioral
+            CommandPattern
+            ObserverPattern
+            StatePattern
+            StrategyPattern
+            TemplateMethodPattern
+          end
+          subgraph Resilience
+            CircuitBreakerPattern
+            RetryPattern
+            TimeoutPattern
+          end
+          Creational --> Structural
+          Structural --> Behavioral
+          Behavioral --> Resilience
+      </script>
+    </section>
+
+    <section id="SingletonPattern">
+      <h2>SingletonPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.creational.SingletonPattern</code></p>
+    </section>
+
+    <section id="PrototypePattern">
+      <h2>PrototypePattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.creational.PrototypePattern</code></p>
+    </section>
+
+    <section id="FactoryPattern">
+      <h2>FactoryPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.creational.FactoryPattern</code></p>
+    </section>
+
+    <section id="BuilderPattern">
+      <h2>BuilderPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.creational.BuilderPattern</code></p>
+    </section>
+
+    <section id="AbstractFactoryPattern">
+      <h2>AbstractFactoryPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.creational.AbstractFactoryPattern</code></p>
+    </section>
+
+    <section id="AdapterPattern">
+      <h2>AdapterPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.structural.AdapterPattern</code></p>
+    </section>
+
+    <section id="CompositePattern">
+      <h2>CompositePattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.structural.CompositePattern</code></p>
+    </section>
+
+    <section id="DecoratorPattern">
+      <h2>DecoratorPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.structural.DecoratorPattern</code></p>
+    </section>
+
+    <section id="FacadePattern">
+      <h2>FacadePattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.structural.FacadePattern</code></p>
+    </section>
+
+    <section id="ProxyPattern">
+      <h2>ProxyPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.structural.ProxyPattern</code></p>
+    </section>
+
+    <section id="CommandPattern">
+      <h2>CommandPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.behavioral.CommandPattern</code></p>
+    </section>
+
+    <section id="ObserverPattern">
+      <h2>ObserverPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.behavioral.ObserverPattern</code></p>
+    </section>
+
+    <section id="StatePattern">
+      <h2>StatePattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.behavioral.StatePattern</code></p>
+    </section>
+
+    <section id="StrategyPattern">
+      <h2>StrategyPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.behavioral.StrategyPattern</code></p>
+    </section>
+
+    <section id="TemplateMethodPattern">
+      <h2>TemplateMethodPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.behavioral.TemplateMethodPattern</code></p>
+    </section>
+
+    <section id="CircuitBreakerPattern">
+      <h2>CircuitBreakerPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.resilience.CircuitBreakerPattern</code></p>
+      <h3>README</h3>
+      <div class="readme">
+Resilience Patterns
+
+This directory contains demo implementations for common resilience/fault-tolerance patterns.
+
+Files:
+- `CircuitBreakerPattern.java` - toy circuit breaker local implementation. Expected output: shows state transitions from CLOSED -> OPEN -> HALF_OPEN -> CLOSED depending on failures and open duration. The demo prints calls and failure counts.
+- `RetryPattern.java` - simple retry policy with exponential backoff and jitter. Expected output: attempts with retry delays and eventual success (or final failure after max attempts).
+- `TimeoutPattern.java` - uses an ExecutorService to run tasks with a timeout. Expected output: first case completes within timeout; second case times out and is cancelled.
+- `Resilience4jExamples.java` - a short demo that demonstrates presence of Resilience4j on the classpath. For production examples, the pom includes explicit Resilience4j modules (`resilience4j-core`, `resilience4j-circuitbreaker`, `resilience4j-retry`, `resilience4j-timelimiter`).
+
+Notes:
+- These examples are intentionally minimal and self-contained for learning. They are safe to run locally and print traces to stdout.
+- For production use, prefer using a mature library like `resilience4j` and integrate it with metrics collection and configuration.
+
+Running tests:
+- The repository includes basic JUnit tests that run each demo's `main` method. Use `mvn test` to run them (requires internet to download test dependencies).
+      </div>
+    </section>
+
+    <section id="RetryPattern">
+      <h2>RetryPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.resilience.RetryPattern</code></p>
+    </section>
+
+    <section id="TimeoutPattern">
+      <h2>TimeoutPattern</h2>
+      <p>See source: <code>com.debasish.designpatterns.resilience.TimeoutPattern</code></p>
+    </section>
+
+    <section id="project-readme">
+      <h2>Project README</h2>
+      <div class="readme">
+# java-design-patterns-practice
+Collection of Java &amp; Spring Boot design pattern implementations with simple explanations and real-world examples.
+
+# Java Design Patterns with Spring Boot 🚀
+
+This repository contains simple and practical implementations of **Design Patterns using Java and Spring Boot**.
+
+The goal of this repo is to:
+- Understand design patterns in a simple way
+- See real-world usage in Spring Boot
+- Prepare for backend interviews
+
+---
+
+## 📌 What are Design Patterns?
+
+Design patterns are reusable solutions to common software design problems.
+
+They help to:
+- Write clean code
+- Improve scalability
+- Reduce tight coupling
+- Make code easier to maintain
+
+---
+
+## 🧩 Types of Design Patterns Covered
+
+### 1. Creational Patterns
+- Singleton
+- Factory
+- Abstract Factory
+- Builder
+- Prototype
+
+### 2. Structural Patterns
+- Adapter
+- Decorator
+- Proxy
+- Facade
+- Composite
+
+### 3. Behavioral Patterns
+- Strategy
+- Observer
+- Command
+- State
+- Template Method
+
+---
+
+## 📂 Project Structure
+
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
+
