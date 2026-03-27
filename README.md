@@ -1,7 +1,7 @@
 # java-design-patterns-practice
 Collection of Java &amp; Spring Boot design pattern implementations with simple explanations and real-world examples.
 
-# Java Design Patterns with Spring Boot 🚀
+# Java Design Patterns with Spring Boot.
 
 This repository contains simple and practical implementations of **Design Patterns using Java and Spring Boot**.
 
@@ -12,7 +12,7 @@ The goal of this repo is to:
 
 ---
 
-## 📌 What are Design Patterns?
+## What are Design Patterns?
 
 Design patterns are reusable solutions to common software design problems.
 
@@ -24,7 +24,7 @@ They help to:
 
 ---
 
-## 🧩 Types of Design Patterns Covered
+## Types of Design Patterns Covered
 
 ### 1. Creational Patterns
 - Singleton
