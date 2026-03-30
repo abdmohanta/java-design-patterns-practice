@@ -27,13 +27,10 @@ public class StrategyPattern {
                 System.out.println("Amount: $" + amount);
                 System.out.println("✓ Payment successful via Credit Card\n");
             }
-
             private String maskCardNumber(String cardNumber) {
                 return cardNumber.substring(0, 4) + "-****-****-" + cardNumber.substring(12);
             }
         }
-
-        // Concrete Strategy 2 - PayPal Payment
         class PayPalPayment implements PaymentStrategy {
             private String email;
             private String password;
@@ -49,7 +46,6 @@ public class StrategyPattern {
                 System.out.println("✓ Payment successful via PayPal\n");
             }
         }
-        // Concrete Strategy 3 - Bitcoin Payment
         class BitcoinPayment implements PaymentStrategy {
             private String walletAddress;
             public BitcoinPayment(String walletAddress) {
@@ -79,7 +75,6 @@ public class StrategyPattern {
             }
         }
 
-        // Context - Order Processor
         class OrderProcessor {
             private PaymentStrategy paymentStrategy;
             public void setPaymentStrategy(PaymentStrategy strategy) {
@@ -96,31 +91,26 @@ public class StrategyPattern {
             }
         }
 
-        // Demonstrate Strategy Pattern
+
         System.out.println("========== Strategy Pattern Demo ==========\n");
-        // Create order processor
         OrderProcessor processor = new OrderProcessor();
-        // Strategy 1: Credit Card Payment
         System.out.println("--- Strategy 1: Credit Card Payment ---");
         PaymentStrategy creditCard = new CreditCardPayment("1234-5678-9012-3456", "John Doe", "123");
         processor.setPaymentStrategy(creditCard);
         processor.processPayment(150.00);
-        // Strategy 2: PayPal Payment
+
         System.out.println("--- Strategy 2: PayPal Payment ---");
         PaymentStrategy paypal = new PayPalPayment("john@example.com", "password123");
         processor.setPaymentStrategy(paypal);
         processor.processPayment(200.00);
-        // Strategy 3: Bitcoin Payment
         System.out.println("--- Strategy 3: Bitcoin Payment ---");
         PaymentStrategy bitcoin = new BitcoinPayment("1A1z7agoat2YLZW51Bc1P4JPc9cbky4eZN");
         processor.setPaymentStrategy(bitcoin);
         processor.processPayment(500.00);
-        // Strategy 4: Google Pay
         System.out.println("--- Strategy 4: Google Pay ---");
         PaymentStrategy googlePay = new GooglePayPayment("+1-555-0123");
         processor.setPaymentStrategy(googlePay);
         processor.processPayment(75.50);
-        // Change strategy dynamically
         System.out.println("--- Switching Back to Credit Card ---");
         processor.setPaymentStrategy(creditCard);
         processor.processPayment(99.99);
