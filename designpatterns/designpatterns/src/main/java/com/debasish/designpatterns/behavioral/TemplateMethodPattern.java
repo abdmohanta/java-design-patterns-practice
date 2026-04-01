@@ -1,55 +1,35 @@
 package com.debasish.designpatterns.behavioral;
 
 public class TemplateMethodPattern {
-
     public static void main(String[] args) {
-
-        // Step 1: Create abstract class (template)
         abstract class Beverage {
-
-            // template method (final so no one can change flow)
             final void makeDrink() {
-
-                boilWater(); // common step
-                addIngredients(); // different for each drink
-                serve(); // common step
+                boilWater();
+                addIngredients();
+                serve();
             }
-
             void boilWater() {
-                System.out.println("Boiling water"); // same for all
+                System.out.println("Boiling water");
             }
-
-            abstract void addIngredients(); // to be implemented
-
+            abstract void addIngredients();
             void serve() {
-                System.out.println("Serving drink"); // same for all
+                System.out.println("Serving drink");
             }
         }
-
-        // Step 2: Create Tea class
         class Tea extends Beverage {
-
             void addIngredients() {
-                System.out.println("Adding Tea Leaves"); // tea specific
+                System.out.println("Adding Tea Leaves");
             }
         }
-
-        // Step 3: Create Coffee class
         class Coffee extends Beverage {
-
             void addIngredients() {
-                System.out.println("Adding Coffee Powder"); // coffee specific
+                System.out.println("Adding Coffee Powder");
             }
         }
-
-        // Step 4: Use Template Method
-
-        Beverage tea = new Tea(); // create tea object
-        tea.makeDrink(); // follow template steps
-
+        Beverage tea = new Tea();
+        tea.makeDrink();
         System.out.println("----");
-
-        Beverage coffee = new Coffee(); // create coffee object
-        coffee.makeDrink(); // same steps, different behavior
+        Beverage coffee = new Coffee();
+        coffee.makeDrink();
     }
 }
