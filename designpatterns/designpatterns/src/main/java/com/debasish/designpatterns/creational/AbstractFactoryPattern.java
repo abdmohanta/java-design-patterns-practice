@@ -54,7 +54,6 @@ public class AbstractFactoryPattern {
             public Button createButton() {
                 return new WindowsButton();
             }
-
             @Override
             public Checkbox createCheckbox() {
                 return new WindowsCheckbox();
@@ -97,17 +96,14 @@ public class AbstractFactoryPattern {
         GUIFactory windowsFactory = new WindowsFactory();
         Application windowsApp = new Application(windowsFactory);
         windowsApp.render();
-
         System.out.println("\n=== Creating Mac GUI ===");
         GUIFactory macFactory = new MacFactory();
         Application macApp = new Application(macFactory);
         macApp.render();
-
         System.out.println("\n=== Creating Linux GUI ===");
         GUIFactory linuxFactory = new LinuxFactory();
         Application linuxApp = new Application(linuxFactory);
         linuxApp.render();
-
         System.out.println("\n=== Creating multiple families ===");
         GUIFactory[] factories = {
             new WindowsFactory(),
