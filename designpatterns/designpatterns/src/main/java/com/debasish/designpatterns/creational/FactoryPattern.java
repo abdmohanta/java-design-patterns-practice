@@ -66,9 +66,7 @@ class Triangle implements Shape {
 }
 
 class ShapeFactory {
-
     public static Shape createShape(String shapeType, double... dimensions) {
-
         if (shapeType == null || shapeType.isEmpty()) {
             return null;
         }
@@ -95,31 +93,24 @@ class ShapeFactory {
             default:
                 System.out.println("Unknown shape type: " + shapeType);
         }
-
         return null;
     }
 }
 
 public class FactoryPattern {
-
     public static void main(String[] args) {
-
         Shape shape1 = ShapeFactory.createShape("circle", 5.0);
         shape1.draw();
         shape1.calculateArea();
-
         System.out.println("\n");
-
         Shape shape2 = ShapeFactory.createShape("rectangle", 10.0, 20.0);
         shape2.draw();
         shape2.calculateArea();
-
         System.out.println("\n");
 
         Shape shape3 = ShapeFactory.createShape("triangle", 15.0, 8.0);
         shape3.draw();
         shape3.calculateArea();
-
         System.out.println("\n");
 
         String[] shapes = {"circle", "rectangle", "triangle"};
