@@ -1,6 +1,5 @@
 package com.debasish.designpatterns.creational;
 
-// SingletonExample class
 class SingletonExample {
     static SingletonExample instance;
     private SingletonExample() {
@@ -8,7 +7,7 @@ class SingletonExample {
     }
     public static SingletonExample getInstance() {
         if (instance == null) {
-            instance = new SingletonExample(); // object created first time only
+            instance = new SingletonExample();
         }
         return instance;
     }
