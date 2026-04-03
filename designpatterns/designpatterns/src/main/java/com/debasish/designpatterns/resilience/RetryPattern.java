@@ -5,7 +5,6 @@ public class RetryPattern {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("--- Retry Pattern Demo ---");
 
-        // Flaky service that fails a specified number of times before succeeding
         class FlakyService implements java.util.concurrent.Callable<String> {
             private int failuresRemaining;
             private final String name;
@@ -25,7 +24,6 @@ public class RetryPattern {
             }
         }
 
-        // Simple retry policy implemented as a local class
         class RetryPolicy {
             private final int maxAttempts;
             private final long baseDelayMillis;
@@ -52,10 +50,8 @@ public class RetryPattern {
                             throw ex;
                         }
 
-                        // Exponential backoff with jitter
                         long delay = (long) (baseDelayMillis * Math.pow(multiplier, attempt - 1));
                         if (delay > maxDelayMillis) delay = maxDelayMillis;
-                        // add jitter up to +/-25% of delay
                         double jitterFactor = 0.5 + random.nextDouble(); // 0.5 .. 1.5
                         long jittered = Math.max(0, (long) (delay * jitterFactor));
 
@@ -71,7 +67,6 @@ public class RetryPattern {
             }
         }
 
-        // Example usage
         FlakyService svc = new FlakyService("retry-service", 2); // fails twice then succeeds
         RetryPolicy retry = new RetryPolicy(5, 200, 2.0, 2000);
 
