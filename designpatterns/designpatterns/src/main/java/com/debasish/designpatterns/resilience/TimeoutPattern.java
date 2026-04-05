@@ -34,7 +34,6 @@ public class TimeoutPattern {
                     future.cancel(true);
                     throw new java.util.concurrent.TimeoutException("Operation timed out after " + timeoutMillis + "ms");
                 } catch (java.util.concurrent.ExecutionException ee) {
-                    // unwrap
                     Throwable cause = ee.getCause();
                     if (cause instanceof Exception) throw (Exception) cause;
                     throw new RuntimeException(cause);
@@ -47,16 +46,12 @@ public class TimeoutPattern {
         }
 
         TimeoutExecutor tex = new TimeoutExecutor();
-
-        // Case 1: task completes within timeout
         try {
             String r1 = tex.callWithTimeout(new LongTask(300), 1000);
             System.out.println("Task finished: " + r1);
         } catch (Exception ex) {
             System.out.println("Case 1 exception: " + ex.getMessage());
         }
-
-        // Case 2: task exceeds timeout and is cancelled
         try {
             String r2 = tex.callWithTimeout(new LongTask(1500), 800);
             System.out.println("Task finished: " + r2);
