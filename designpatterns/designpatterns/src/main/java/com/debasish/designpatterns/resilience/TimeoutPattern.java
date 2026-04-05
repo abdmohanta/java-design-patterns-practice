@@ -4,8 +4,6 @@ public class TimeoutPattern {
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("--- Timeout Pattern Demo ---");
-
-        // Simulated long-running task
         class LongTask implements java.util.concurrent.Callable<String> {
             private final long workMillis;
 
@@ -25,8 +23,6 @@ public class TimeoutPattern {
                 return "Completed after " + workMillis + "ms";
             }
         }
-
-        // Simple timeout wrapper using ExecutorService
         class TimeoutExecutor {
             private final java.util.concurrent.ExecutorService exec = java.util.concurrent.Executors.newCachedThreadPool();
 
