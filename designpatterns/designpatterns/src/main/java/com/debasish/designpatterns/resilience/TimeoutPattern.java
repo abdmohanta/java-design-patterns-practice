@@ -6,7 +6,6 @@ public class TimeoutPattern {
         System.out.println("--- Timeout Pattern Demo ---");
         class LongTask implements java.util.concurrent.Callable<String> {
             private final long workMillis;
-
             LongTask(long workMillis) {
                 this.workMillis = workMillis;
             }
@@ -25,7 +24,6 @@ public class TimeoutPattern {
         }
         class TimeoutExecutor {
             private final java.util.concurrent.ExecutorService exec = java.util.concurrent.Executors.newCachedThreadPool();
-
             public <T> T callWithTimeout(java.util.concurrent.Callable<T> task, long timeoutMillis) throws Exception {
                 java.util.concurrent.Future<T> future = exec.submit(task);
                 try {
@@ -60,7 +58,6 @@ public class TimeoutPattern {
         }
 
         tex.shutdown();
-
         System.out.println("--- Timeout Pattern Demo finished ---");
     }
 }
